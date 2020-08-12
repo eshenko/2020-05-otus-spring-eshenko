@@ -2,27 +2,35 @@ package ru.otus.spring.dao;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.io.ClassPathResource;
+import org.mockito.Mockito;
+import org.springframework.core.io.Resource;
 import ru.otus.spring.domain.Question;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Класс QuestionDao")
 class QuestionDaoCsvImplTest {
 
-    @DisplayName("корректное получение данных")
+    @DisplayName("конструктор создает корректный объект")
     @Test
-    void getQuestionsDaoCsv() {
+    void constructorShouldCreateCorrectObject() throws IOException {
+        Resource fileMock = Mockito.mock(Resource.class);
+
         String[] row = {"1","Question","1","A","B","C","D"};
+        Question question = new Question(row);
 
-        List<Question> testQuestions = new ArrayList<>();
-        testQuestions.add(new Question(row));
+        String rawData = "\"№\",\"Question\",\"Right Answer\",\"Answer1\",\"Answer2\",\"Answer3\",\"Answer4\"\n" +
+                "\"1\",\"Question\",\"1\",\"A\",\"B\",\"C\",\"D\"";
 
-        ClassPathResource resource = new ClassPathResource("test.csv");
-        QuestionDaoCsv dao = new QuestionDaoCsvImpl(resource);
+        try (InputStream is = new ByteArrayInputStream(rawData.getBytes())) {
+            Mockito.when(fileMock.getInputStream()).thenReturn(is);
+            QuestionDaoCsv questions = new QuestionDaoCsvImpl(fileMock);
 
-        assertEquals(testQuestions, dao.getQuestionsDaoCsv());
+            assertEquals(question.getRightAnswer(), questions.getQuestionsDaoCsv().get(0).getRightAnswer());
+        }
     }
 }
