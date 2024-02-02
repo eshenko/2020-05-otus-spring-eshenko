@@ -19,7 +19,7 @@
 
     <properties>
         <net.sf.opencsv.version>2.3</net.sf.opencsv.version>
-        <org.springframework.version>5.2.6.RELEASE</org.springframework.version>
+        <org.springframework.version>5.2.22.RELEASE</org.springframework.version>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
         <maven.compiler.release>11</maven.compiler.release>
         <maven.compiler.parameters>true</maven.compiler.parameters>
